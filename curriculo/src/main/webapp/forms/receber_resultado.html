@@ -1,0 +1,81 @@
+<!--
+You can use this form through Camunda Tasklist
+by setting the formKey of a BPMN User Task to:
+embedded:app:forms/task-form.html
+-->
+
+<form name="receber_resultado" class="form-horizontal" role="form">
+
+  <!--Setor Resultado-->
+  <!-- read-only field -->
+  <div class="form-group">
+    <label for="nome_candidato" class="col-sm-2 control-label">Nome Candidato:</label>
+    <div class="col-sm-10">
+      <input type="text" name="nome_candidato" cam-variable-name="nome" disabled cam-variable-type="String"
+        class="form-control" />
+    </div>
+  </div>
+
+  <!-- read-only field -->
+  <div class="form-group">
+    <label for="telefone_contato" class="col-sm-2 control-label">Telefone Contato:</label>
+    <div class="col-sm-10">
+      <input type="text" name="telefone_contato" cam-variable-name="telefone" disabled cam-variable-type="String"
+        class="form-control" />
+    </div>
+  </div>
+
+  <!-- read-only field -->
+  <div class="form-group">
+    <label for="email" class="col-sm-2 control-label">Email:</label>
+    <div class="col-sm-10">
+      <input type="text" name="email" cam-variable-name="email" cam-variable-type="String" disabled
+        class="form-control" />
+    </div>
+  </div>
+
+  <!-- read-only field -->
+  <div class="form-group">
+    <label for="data" class="col-sm-2 control-label">Data Entrevista:</label>
+    <div class="col-sm-10">
+      <input type="text" name="data" cam-variable-name="dataEntrevista" disabled cam-variable-type="String"
+        class="form-control" />
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="resultado" class="col-sm-2">Setor Resultado</label>
+    <div class="col-sm-12">
+      <textarea class="form-control" name="resultado" cam-variable-name="resultado" cam-variable-type="String"
+        class="form-control">
+      </textarea>
+    </div>
+  </div>
+
+  <table class='table table-responsive'>
+    <tr ng-repeat="(key, value) in listaObs">
+      <td> {{key}} -> {{value}}</td>
+    </tr>
+  </table>
+
+  <script cam-script type="text/form-script">
+
+    $scope.resultado = "";
+    $scope.listaObs = [];
+
+  camForm.on('form-loaded', function() {
+    camForm.variableManager.fetchVariable('observacao'); 
+  });
+
+  camForm.on('variables-fetched', function() {
+    $scope.listaObs = camForm.variableManager.variableValue('observacao');
+  });
+
+  camForm.on('submit', function(evt){
+    
+    $scope.listaObs.push($scope.resultado);
+
+    camForm.variableManager.variableValue('observacao', $scope.listaObs);
+  });
+  </script>
+</form>

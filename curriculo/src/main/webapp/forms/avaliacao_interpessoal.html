@@ -1,0 +1,80 @@
+<!--
+You can use this form through Camunda Tasklist
+by setting the formKey of a BPMN User Task to:
+embedded:app:forms/task-form.html
+-->
+
+<form name="avaliacao_interpessoal" class="form-horizontal" role="form">
+
+  <!--Avaliação Interpessoal-->
+  <!-- read-only field -->
+  <div class="form-group">
+    <label for="nome_candidato" class="col-sm-2 control-label">Nome Candidato:</label>
+    <div class="col-sm-10">
+      <input type="text" name="nome_candidato" cam-variable-name="nome" disabled cam-variable-type="String"
+        class="form-control" />
+    </div>
+  </div>
+
+  <!-- read-only field -->
+  <div class="form-group">
+    <label for="telefone_contato" class="col-sm-2 control-label">Telefone Contato:</label>
+    <div class="col-sm-10">
+      <input type="text" name="telefone_contato" cam-variable-name="telefone" disabled cam-variable-type="String"
+        class="form-control" />
+    </div>
+  </div>
+
+  <!-- read-only field -->
+  <div class="form-group">
+    <label for="email" class="col-sm-2 control-label">Email:</label>
+    <div class="col-sm-10">
+      <input type="text" name="email" cam-variable-name="email" disabled cam-variable-type="String"
+        class="form-control" />
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="interpessoal" class="col-sm-2">--setor Interpessoal--</label>
+    <div class="col-sm-12">
+      <textarea class="form-control" name="inter" ng-model="inter">
+          </textarea>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="avaliacao_antecedentes" class="col-sm-12">Observação Avaliação Antecedentes</label>
+    <div class="col-sm-12">
+      <textarea name="avaliacao_antecedentes" ng-model="dadosAntecedentes" disabled class="form-control">
+        </textarea>
+    </div>
+  </div>
+
+  <table class='table table-responsive'>
+    <tr ng-repeat="(key, value) in listaObs">
+      <td> {{key}} -> {{value}}</td>
+    </tr>
+  </table>
+
+  <script cam-script type="text/form-script">
+
+    $scope.inter = "";
+    $scope.listaObs = [];
+
+    camForm.on('form-loaded', function() {
+      camForm.variableManager.fetchVariable('avaliacao_antecedentes');
+      camForm.variableManager.fetchVariable('observacao'); 
+    });
+
+    camForm.on('variables-fetched', function() {
+      $scope.dadosAntecedentes = camForm.variableManager.variableValue('avaliacao_antecedentes');
+      $scope.listaObs = camForm.variableManager.variableValue('observacao');
+    });
+
+    camForm.on('submit', function(evt){ 
+      $scope.listaObs.push($scope.inter);
+      $scope.listaObs.push($scope.dadosAntecedentes);  
+      camForm.variableManager.variableValue('observacao', $scope.listaObs);
+    });
+  </script>
+</form>
